@@ -74,39 +74,14 @@ diagNon  = lam**2*np.ones(Nxt-2)
 diagUp   = np.insert(diagNon, 0, 0)
 diagDown = np.insert(diagNon, np.size(diagNon), 0)
 
-
-# print(diag)                 #DEBUG
-# print(diagNon)               #DEBUG
-# print(diagDown)                #DEBUG
-# print(diagUp  )                #DEBUG
 #--
 A = np.eye(Nxt-1, Nxt-1, k=0)*diag + np.eye(Nxt-1, Nxt-1, k=-1)*diagDown + np.eye(Nxt-1, Nxt-1, k=1)*diagUp;
-#print(A)                                    #DEBUG
-# print(f'lambda**2={lam**2}')                #DEBUG
-# A1= np.eye(Nt-1, Nxt-1, k=+1) * diag2       #DEBUG
-# A2= np.eye(Nt-1, Nxt-1, k=-1) * diag1       #DEBUG
-# print(A1)                                   #DEBUG
-# print(A2)                                   #DEBUG
 
-# print(np.eye(Nt-1, Nxt-1, k=-1))*diag
-# print(np.eye(Nt-1, Nxt-1, k=+1))
-# if   (Nxt < Nt ):   # or (minN==Nxt) 
-#     #diag2 = np.insert(diag2, 0, 0)
-#     A     = A + np.eye(Nt-1, Nxt-1, k=+1)*diag2 + np.eye(Nt-1, Nxt-1, k=-1)*diag1;
-# elif (Nxt > Nt):  # or (minN==Nt)
-#     diag2 = np.insert(diag2, len(diag2), 0) 
-#     A     = A + np.eye(Nt-1, Nxt-1, k=+1)*diag1 + np.eye(Nt-1, Nxt-1, k=-1)*diag2;
-# elif (Nxt == Nt):
-#     A     = A + np.eye(Nt-1, Nxt-1, k=+1)*diag2 + np.eye(Nt-1, Nxt-1, k=-1)*diag2;
-
-#print(np.shape(A))                                     #DEBUG
-#print(lam)
 print("# ---- Finished with A def")                     #DEBUG
 #--------------------------------------
 #   - Compute the potential vector
 #-------------------------------------
 V = np.zeros((Nxt-1))
-# print(np.shape(V))                           #DEBUG
 print("# ---- Finished with V definition")   #DEBUG
 #--------------------------------------
 #   - Start the iterations
@@ -114,10 +89,6 @@ print("# ---- Finished with V definition")   #DEBUG
 for j in range(1, Nt):
     b = psi[j  , 1:-1];
     c = psi[j-1, 1:-1];
-    # print(np.shape(b))
-    # print(np.shape(c))
-    # print(np.shape(psi[j+1, 1:-1]))
-    # print(np.shape(np.matmul(A,b)))
     psi[j+1, 1:-1] = np.matmul(A, b) - c - V
 
 
@@ -137,18 +108,10 @@ zlabel       = "psi"
 plot3d.plotMesh(t, xt, psi, title, xlabel, ylabel, zlabel, 
         saveLocMesh, save=1, show=0)
 
-# test 
+# 2d-plot                                #TODO 4.
 import matplotlib.pyplot as plt 
 from mpl_toolkits.mplot3d import Axes3D
 #-----------------------------------------------
-# fig = plt.figure();
-# ax  = fig.add_subplot(projection='3d')
-# ax.plot_surface(t, xt, psi)
-# #   -- cosmetics
-# ax.set_title(title)
-# ax.set_xlabel(xlabel); ax.set_ylabel(ylabel); ax.set_zlabel(zlabel);
-
-# 
 fig2 = plt.figure()
 ax2  = fig2.add_subplot(1, 1, 1)
 for i in range(Nt+1):

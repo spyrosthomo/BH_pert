@@ -11,12 +11,6 @@ def plotMesh(x, y, u, title, xlabel, ylabel, zlabel, saveLocation, save=0, show=
     #-----------------------------------------------
     X ,Y = np.meshgrid(x, y)
     X = np.transpose(X); Y = np.transpose(Y)
-    print("#ouf")
-    print(np.shape(x))
-    print(np.shape(y))
-    print(np.shape(X))
-    print(np.shape(Y))
-    print(np.shape(u))
     fig  = plt.figure();
     ax   = fig.add_subplot(projection='3d')
     ax.plot_surface(X, Y, u)
