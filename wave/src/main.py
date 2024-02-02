@@ -9,6 +9,7 @@ import inc
 sys.path.append('./bics') 
 import bc1, ic1                      #TODO 1.
 sys.path.append('./potentials')
+import harmonicOsc
 sys.path.append('./plots')
 import plot3d                        #TODO 3.
 
@@ -80,8 +81,12 @@ A = np.eye(Nxt-1, Nxt-1, k=0)*diag + np.eye(Nxt-1, Nxt-1, k=-1)*diagDown + np.ey
 print("# ---- Finished with A def")                     #DEBUG
 #--------------------------------------
 #   - Compute the potential vector
-#-------------------------------------
-V = np.zeros((Nxt-1))
+#--------------------------------------
+#V = np.zeros((Nxt-1))
+#--------------------------------------
+#print(np.shape(V))                          #DEBUG
+V = harmonicOsc.potential(inc.vp1)
+harmonicOsc.potentialPlot()
 print("# ---- Finished with V definition")   #DEBUG
 #--------------------------------------
 #   - Start the iterations
@@ -118,6 +123,20 @@ for i in range(Nt+1):
     if i%10 == 0 :
         ax2.plot(xt, psi[i, :], label=f'i={i}')
 plt.legend()
-plt.show(block=True)
 
 plot3d.saveFig(fig2, "../figures/2d.pdf")
+
+
+# plot IC                           #TODO 4.
+fig3 = plt.figure()
+ax3  = fig3.add_subplot(1,1,1)
+ax3.plot(xt, psi[0,:])
+ax3.set_title("Initial condition")
+ax3.set_xlabel("x")
+ax3.set_ylabel("psi(t=0,x)")
+
+fig3.savefig('../figures/IC.pdf')
+
+
+#==============================================
+plt.show(block=True)
