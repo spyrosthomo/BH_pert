@@ -1,7 +1,7 @@
 '''
     Module for 3d plotting 
 '''
-def plotMesh(x, y, u, title, xlabel, ylabel, zlabel, saveLocation, save=0, show=0):
+def plotMesh(x, y, u, title, xlabel, ylabel, zlabel, saveLocation=0, show=0):
     '''
         plots 3d surfs on a grid 
     '''
@@ -18,7 +18,7 @@ def plotMesh(x, y, u, title, xlabel, ylabel, zlabel, saveLocation, save=0, show=
     ax.set_title(title)
     ax.set_xlabel(xlabel); ax.set_ylabel(ylabel); ax.set_zlabel(zlabel);
     #   -- save
-    if save:
+    if saveLocation:
         saveFig(fig, saveLocation)
     if show:
         plt.show(block=1)

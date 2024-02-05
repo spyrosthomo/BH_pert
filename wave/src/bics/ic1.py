@@ -17,13 +17,10 @@ def icDer0():        # IC for psi
     sigma = inc.icp2; 
     xt    = np.linspace(xti, xtf, Nxt+1)
     #--- 
-    exponent = -0.5*(xt-mean*np.ones((1, Nxt+1)))**2/sigma**2
-    # print("# --- icDer0 ")               #DEBUG
-    # print(np.shape(exponent))             #DEBUG
-    # print((1/sigma)*np.exp(exponent))    #DEBUG
+    exponent = -0.5*(xt-mean)**2/sigma**2
     return (1/sigma)*np.exp(exponent); 
 #-----------------------------------------------------------
-def icDer1():        # IC for 1st derivative of psi 
+def icDer1(ic1):        # IC for 1st derivative of psi 
     '''
         I.C. for the derivative 
     '''
@@ -31,8 +28,6 @@ def icDer1():        # IC for 1st derivative of psi
     import inc 
     #----------------------------
     Nxt = inc.Nxt
-    # print("# --- icDer1 ")              #DEBUG
-    # print(np.shape(np.zeros((1, Nxt+1))))     #DEBUG
-    # print(np.zeros((1, Nxt+1) ))         #DEBUG
-    return np.zeros((1, Nxt+1))
+    #return np.zeros((1, Nxt+1))
+    return ic1
 #---------------------------------------
