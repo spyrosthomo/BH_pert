@@ -22,12 +22,8 @@ def icDer0():        # IC for psi
 #-----------------------------------------------------------
 def icDer1(ic1):        # IC for 1st derivative of psi 
     '''
-        I.C. for the derivative 
+        I.C. for the derivative = 0 
+        ==> u(1, xt) = u(0, xt)
     '''
-    import numpy as np 
-    import inc 
-    #----------------------------
-    Nxt = inc.Nxt
-    #return np.zeros((1, Nxt+1))
     return ic1
 #---------------------------------------

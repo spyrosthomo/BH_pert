@@ -4,7 +4,6 @@
 
 class Method:
     import inc 
-    methodName = ""
     #-------------------------
     def __init__(self): 
         import numpy as np 

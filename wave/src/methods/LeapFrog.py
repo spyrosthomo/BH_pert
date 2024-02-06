@@ -3,7 +3,6 @@
 ''' 
 class Method:
     import inc
-    methodName = ""
     #-----------------
     def __init__(self):
         self.methodName = "LeapFrog"
