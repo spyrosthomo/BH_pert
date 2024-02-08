@@ -27,3 +27,7 @@ def icDer1(ic1):        # IC for 1st derivative of psi
     '''
     return ic1
 #---------------------------------------
+def ic1Fun():
+    import numpy as np 
+    import inc 
+    return np.zeros(inc.Nxt+1)

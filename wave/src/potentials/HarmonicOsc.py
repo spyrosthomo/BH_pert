@@ -5,7 +5,7 @@
 class Potential:
     import inc 
     #---------------------
-    def __init__(self, k):
+    def __init__(self, k, null1, null2, null3):
         import numpy as np
         self.potentialName = "Harmonic Oscillator Potential"
         self.potentialForm = "V = 0.5*k*x^2"

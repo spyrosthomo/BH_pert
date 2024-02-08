@@ -44,11 +44,7 @@ fpath     = './methods/{}.py'.format(meth)
 spec      = importlib.util.spec_from_file_location(meth, fpath)
 module    = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
-Method    = getattr(module, 'Method')
-# potMod  = __import__(pot)   ; Potential = getattr(potMod, Potential)
-# methMod = __import__(method); Method    = getattr(methMod, Method)     
-# from HarmonicOsc import Potential     #TODO 3.        
-# from LeapFrogMat import Method        #TODO 5.
+Method    = getattr(module, 'Method') 
 #-------------------------------------
 #   -   initializations
 #-------------------------------------
@@ -59,10 +55,8 @@ Dxt    = (xtf - xti)/Nxt ; inc.Dxt = Dxt
 c      = 1.0 ;                 # :) 
 lam    =  c * Dt / Dxt   ; inc.lam = lam
 # - vectors 
-t      = np.linspace(ti  , tf , Nt  +1)
+t      = np.linspace(ti , tf , Nt  +1)
 xt     = np.linspace(xti, xtf, Nxt +1)
-print(t)
-print(xt)
 psi    = np.zeros((Nt+1,Nxt+1))                 # psi(t, xt)
 #-------------------------------------
 #   -   print all the useless 
@@ -85,6 +79,12 @@ print("#======================================================================="
 if lam > 1: 
     print("# lambda > 1: !! UNSTABLE, try other Nt, Nxt")
     sys.exit()
+#--------------------------------------
+#   - Compute the potential vector
+#--------------------------------------
+pot = Potential(inc.vp1, inc.vp2, inc.vp3, inc.vp4)
+V   = pot.potential()
+print("# ---- Finished with V definition")   #DEBUG
 #-------------------------------------
 #   - Apply BICs 
 #-------------------------------------
@@ -92,35 +92,40 @@ if lam > 1:
 #         u_t(0, xt) = h(xt)       (2)
 #    We get: (.) u[0,:] from (1)
 #            (.) u[1,:] from (2) as u[1,:] = u[0,:] + Dxt * icDer1
-psi[0, :] = ic.icDer0();
-psi[1, :] = ic.icDer1(psi[0, :]);                       #TODO 2.
+psi[0, :]  = ic.icDer0();
+psi[1, :]  = ic.icDer1(psi[0, :]);                       #TODO 2.
 print("# ---- Finished with I.C.")              #DEBUG
 # - B.C. 
-psi[:,   0] = bc.bcI();             
-psi[:, Nxt] = bc.bcF();
+#psi[:,   0] = bc.bcI();             
+#psi[:, Nxt] = bc.bcF();
 print("# ---- Finished with B.C.")              #DEBUG
 #--------------------------------------
-#   - Declare/Define the constant matrix 
+#   - instance of the method used
 #-------------------------------------
 meth   = Method(); 
-#A      = meth.A
-print("# ---- Finished with A def")                     #DEBUG
-#--------------------------------------
-#   - Compute the potential vector
-#--------------------------------------
-#--------------------------------------
-pot = Potential(inc.vp1, inc.vp2, inc.vp3, inc.vp4)
-V   = pot.potential()
-#V = np.zeros((Nxt+1))
-print("# ---- Finished with V definition")   #DEBUG
+print("# ---- Finished with method def")                     #DEBUG
 #--------------------------------------
 #   - Start the iterations
 #-------------------------------------
+psi[1,  0] = 2*(1-lam**2)/(2-lam)*psi[0,0]  + 2*lam**2/(2-lam)*psi[0, 1] - (lam-1)/(lam+1)*2*Dt*0            - Dt**2/(2-lam)*V[0 ]*psi[0, 0]
+psi[1,Nxt] = 2*(1-lam**2)/(2-lam)*psi[0,-1] + 2*lam**2/(2-lam)*psi[0,-2] + (1-lam**2)/(2-lam)/(2-lam)*2*Dt*0 - Dt**2/(2-lam)*V[-1]*psi[0,-1]
+#psi[1, 0  ] = bc.bcI(psi[0,:])#lam*psi[0,1]      - (lam-1)*psi[0, 0]
+#psi[1, Nxt] = bc.bcF(psi[0,:])#(1-lam)*psi[0,-1] + lam*psi[0, -2]
 for j in range(2, Nt+1):
-    b = psi[j-1, :];
-    c = psi[j-2, :];
+    b = psi[j-1, :]
+    c = psi[j-2, :]
+    # proxeirh implementation of NonR   ---------- cosfonor START |
+    # right
+#    psi[j, Nxt] = (2*(1-lam)*b[-1] + 2*lam**2/(1+lam)*b[-2] + (lam-1)/(lam+1)*c[-1] -
+#        Dt**2/(lam+1)*V[-1]*b[-1])
+    # left
+#    psi[j,  0]  = (2*(1-lam)*b[0] + 2*lam**2/(1+lam)*b[1] - (lam-1)/(1+lam)*c[0] -
+#        Dt**2/(1+lam)*V[0]*b[0])
+    #  -------------------------------------------- cosfonor END |^^^^
+    psi[j, 0  ] = bc.bcI(b)#lam*b[1]      - (lam-1)*b[0]
+    psi[j, Nxt] = bc.bcF(b)#(1-lam)*b[-1] +     lam*b[-2]
     if (meth.methodName   == "LeapFrog"):
-        psi[j, :]    = meth.step(b, c, V)
+        psi[j, 1:-1]    = meth.step(b, c, V)[1:-1]
     elif (meth.methodName == "LeapFrogMat"):
         psi[j, 1:-1] = meth.step(b, c, V)
 
@@ -194,12 +199,12 @@ f     = np.linspace(0 , (N-1)*tstep, N)
 Y     = fft(psiM)
 Y_mag = np.abs(Y) / N
 
-f_plot     = np.linspace(0, Fs/2, N//2+1)
-df         = 0.5*Fs/(N//2+1)
-y_mag_plot = 2*Y_mag[0:N//2+1]
+f_plot        = np.linspace(0, Fs/2, N//2+1)
+df            = 0.5*Fs/(N//2+1)
+y_mag_plot    = 2*Y_mag[0:N//2+1]
 y_mag_plot[0] = y_mag_plot[0]/2
 # - print freqs
-lowerLim = 0.1
+lowerLim = 0.2
 indices  = np.where(y_mag_plot>lowerLim)[0]
 amps     = y_mag_plot[indices]
 freqs    = indices*df
@@ -221,4 +226,11 @@ ax2.set_ylabel("FFT Ampl |X(Freq)|")
 ax2.legend()
 #--------
 plot2d.saveFig(fig, '../figures/fft.pdf')
+
+
+#------------ TEST BOUNDARY NONREFLECTING 
+plot2d.plot2d(t, psi[:, 0], f"BC @ x={xti}", "t", f"psi(t,{xti})", '', '../figures/BCleft.pdf')
+plot2d.plot2d(t, psi[:,-1], f"BC @ x={xtf}", "t", f"psi(t,{xtf})", '', '../figures/BCright.pdf')
+
+#---------------------
 plt.show()
