@@ -8,7 +8,7 @@ def icDer0():     # IC for psi
     import inc 
     #-------------------------
     xti = inc.xti; xtf = inc.xtf;
-    l   = xtf-np.abs(xti)
+    l   = xtf-xti
     Nxt = inc.Nxt;
     xt  = np.linspace(xti, xtf, Nxt+1)
     f1 = inc.icp1; f2 = inc.icp2; f3 = inc.icp3;

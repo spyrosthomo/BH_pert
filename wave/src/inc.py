@@ -9,8 +9,7 @@ ti  = 0; tf  = 0;   #
 xti = 0; xtf = 0;   # xt := "x-tortoise"
 # -- t & x* slices : Nt, Nxt 
 Nt  = 0; Nxt = 0;   # Nxt := "Nx-tortoise"
-Npl = 0;            # draw 2d plots of the solution if i%Npl = 0
 # -- t \& xt steps 
-Dt  = 0; Dxt = 0; 
+Dt  = 0; Dxt = 0; Cxt = 0;
 #----------------------------------------
 lam = 0;

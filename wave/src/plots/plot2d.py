@@ -1,7 +1,7 @@
 '''
     Module for 2d plotting
 '''
-def plot2d(x, y, title, xlabel, ylabel, leg, saveLocation=0, show=0):
+def plot2d(x, y, title, xlabel, ylabel, leg='', saveLocation=0, show=0):
     '''
         simple 2d plots
     '''
@@ -16,7 +16,7 @@ def plot2d(x, y, title, xlabel, ylabel, leg, saveLocation=0, show=0):
     ax.set_xlabel(xlabel); ax.set_ylabel(ylabel)
     ax.grid()
     # -- save 
-    if saveLocation:
+    if (saveLocation):
         saveFig(fig, saveLocation)
     if show:
         plt.show(block=1)

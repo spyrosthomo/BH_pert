@@ -8,6 +8,7 @@ class Potential:
     def __init__(self, V0, a, x0, nulll):
         import numpy as np
         self.potentialName = "Poschl-Teller Potential"
+        self.forFileNames  = "PT"
         self.saveLoc       = "../figures/PT.pdf"
         self.xti           = Potential.inc.xti
         self.xtf           = Potential.inc.xtf
@@ -22,8 +23,6 @@ class Potential:
     def potential(self):
         import numpy as np 
         #----------------------
-        # Nxt = inc.Nxt;
-        # xti = inc.xti; xtf = inc.xtf;
         return self.V0/np.cosh(self.a*(self.xt-self.x0))**2
 #----------------------------------    
     def potentialPlot(self, V):

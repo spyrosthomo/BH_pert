@@ -19,4 +19,4 @@ class Method:
             d2x[i] = prev1[i-1] + prev1[i+1] - 2*prev1[i]
         # the rest
         Vpart      = Dt**2*np.multiply(prev1, V)
-        return 2*prev1 - prev2 + lam**2*(d2x) - Vpart
+        return (2*prev1 - prev2 + lam**2*(d2x) - Vpart)[1:-1]

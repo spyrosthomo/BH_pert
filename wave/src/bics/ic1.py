@@ -10,15 +10,17 @@ def icDer0():        # IC for psi
     import numpy as np
     import inc            #define:  (.) mean :=icp1 
                           #         (.) sigma:=icp2
+                          #         (.) A    :=icp3
     #----------------------------
     xti   = inc.xti; xtf = inc.xtf;
     Nxt   = inc.Nxt; 
     mean  = inc.icp1; 
     sigma = inc.icp2; 
+    A     = inc.icp3;
     xt    = np.linspace(xti, xtf, Nxt+1)
     #--- 
     exponent = -0.5*(xt-mean)**2/sigma**2
-    return (1/sigma)*np.exp(exponent); 
+    return (A/sigma)*np.exp(exponent); 
 #-----------------------------------------------------------
 def icDer1(ic1):        # IC for 1st derivative of psi 
     '''
@@ -31,3 +33,6 @@ def ic1Fun():
     import numpy as np 
     import inc 
     return np.zeros(inc.Nxt+1)
+#--------------------------------------
+def name():
+    return 'Gaussian'
